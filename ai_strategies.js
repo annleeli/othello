@@ -17,9 +17,8 @@ const position_vals = [[120,-20,20,5,5,20,-20,120],
 					   [20,-5,15,3,3,15,-5,20],
 					   [5,-5,3,3,3,3,-5,5],
 					   [5,-5,3,3,3,3,-5,5],
-					   [5,-5,3,3,3,3,-5,5],
-					   [5,-5,3,3,3,3,-5,5],
 					   [20,-5,15,3,3,15,-5,20],
+					   [-20,-40,-5,-5,-5,-5,-40,-20],
 					   [120,-20,20,5,5,20,-20,120]]
 
 
@@ -137,7 +136,7 @@ function minimax(node, depth, eval, max, player, alpha, beta) {
 function simpleMinimax(board, player) {
 	let rootNode = {state: cloneBoard(board), action: null};
 
-	let maxVal = minimax(rootNode, 3, evalCount, true, player, -Infinity, Infinity);
+	let maxVal = minimax(rootNode, 5, evalCount, true, player, -Infinity, Infinity);
 	// console.log("simpleMinimax: ", maxVal);
 	// console.log("simpleMinimax", minimaxMoves)
 	return maxVal.node.action != null ? maxVal.node : false;

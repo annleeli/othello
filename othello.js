@@ -130,10 +130,13 @@ function updateScores() {
 
 }
 
+function getPlayerName(player) {
+	return player ? "Dark" : "Light";
+}
+
 function updatePlayer(player) {
 	var turn = document.getElementById('turn');
-	var text = player ? "Dark" : "Light";
-	turn.innerHTML = text + " Player's turn";
+	turn.innerHTML = getPlayerName(player) + " Player's turn";
 }
 
 function getWinner() {
@@ -352,11 +355,11 @@ async function watchAi() {
 
 	while (inGame) {
 		let ai_move;
-		if (!darkPlayer) {
-			console.log("random")
+		if (darkPlayer) {
+			console.log("random", getPlayerName(darkPlayer))
 			ai_move = randomMove(gameboard, darkPlayer);
 		} else {
-			console.log("minimax")
+			console.log("minimax", getPlayerName(darkPlayer))
 			ai_move = simpleMinimax(gameboard, darkPlayer);
 		}
 		
