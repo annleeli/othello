@@ -438,7 +438,8 @@ function simulation(runs) {
 			light: 0,
 			tie: 0
 		},
-		scores: []
+		scores: [],
+		avgScoreDiff: 0
 	}
 
 	for (var i=0; i<runs; i++) {
@@ -504,7 +505,8 @@ function simulation(runs) {
 		}
 	}
 	let average = (array) => array.reduce((a, b) => a + b) / array.length;
-	console.log("stats", stats, average(stats.scores))
+	stats.avgScoreDiff = average(stats.scores);
+	console.log("stats", stats)
 	
 
 }
