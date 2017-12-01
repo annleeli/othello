@@ -269,7 +269,7 @@ async function doMove(button, i, j) {
 				console.log("AIs turn!")
 				possibleMoves = getPossibleMoves(gameboard, darkPlayer)
 				refreshGameBoard(possibleMoves.board);
-				await sleep(300);	
+				await sleep(400);	
 	
 				// let ai_move = randomMove(gameboard, darkPlayer);
 				let ai_move = simpleMinimax(gameboard, darkPlayer);
