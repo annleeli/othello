@@ -208,6 +208,18 @@ function flipPieces(board,i,j,player) {
 
 }
 
+function blankSpaces(board) {
+	var count = 0;
+	for (let i=0; i < 8; i++)  {
+		for (let j=0; j<8; j++) {
+			if (board[i][j] == BLANK) {
+				count++;
+			}
+		}
+	}
+	return count;
+}
+
 // get all possible moves by searching each blank spot if it is valid
 function getPossibleMoves(board, player) {
 	let possible = cloneBoard(board);
@@ -233,16 +245,19 @@ function startGame(human) {
 	var ingame = document.getElementById('ingame');
 	ingame.className = "";
 
-	var playBtn = document.getElementById('play-button');
-	playBtn.className = "hidden";
+	// var playBtn = document.getElementById('play-button');
+	// playBtn.className = "hidden";
+
+	gameboard = cloneBoard(initial_gameboard);
 
 	darkPlayer = true;
 	updatePlayer(darkPlayer);
 
+	updateScores();
+
 	possibleMoves = getPossibleMoves(gameboard, darkPlayer);
 	possibleBoard = possibleMoves.board;
 	refreshGameBoard(possibleBoard);
-	updateScores();
 
 	inGame = true;
 	humanMode = human;
@@ -294,6 +309,7 @@ async function doMove(button, i, j) {
 
 					// check if human has moves
 					possibleMoves = getPossibleMoves(gameboard, darkPlayer)
+					refreshGameBoard(possibleMoves.board)
 					numPlayerMoves = possibleMoves.moves.length;
 					console.log("HUMAN HAS ", numPlayerMoves)
 					if (numPlayerMoves == 0) {
@@ -340,8 +356,10 @@ async function watchAi() {
 	var ingame = document.getElementById('ingame');
 	ingame.className = "";
 
-	var playBtn = document.getElementById('play-button');
-	playBtn.className = "hidden";
+	// var playBtn = document.getElementById('play-button');
+	// playBtn.className = "hidden";
+
+	gameboard = cloneBoard(initial_gameboard);
 
 	darkPlayer = true;
 	updatePlayer(darkPlayer);
@@ -349,13 +367,15 @@ async function watchAi() {
 	refreshGameBoard(gameboard);
 	updateScores();
 
+	await sleep(300);
+
 	let ableToMove = false;
 
 	inGame = true;
 
 	while (inGame) {
 		let ai_move;
-		if (darkPlayer) {
+		if (!darkPlayer) {
 			console.log("random", getPlayerName(darkPlayer))
 			ai_move = randomMove(gameboard, darkPlayer);
 		} else {
@@ -397,6 +417,9 @@ function gameOver() {
 
 	var turn = document.getElementById('turn');
 	turn.innerHTML = "Winner: " + getWinner();
+
+	// var playBtn = document.getElementById('play-button');
+	// playBtn.className = "";
 
 }
 
