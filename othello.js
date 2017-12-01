@@ -104,25 +104,32 @@ function refreshGameBoard(board) {
 	}
 }
 
+function getScores() {
+	var lscore = 0;
+	var dscore = 0;
+	for (let i=0; i<8; i++) {
+		for (let j=0; j<8; j++) {
+			let value = gameboard[i][j];
+			if (value == DARK) {
+				lscore++;
+			} else if (value == LIGHT) {
+				dscore++;
+			}
+		}
+	}
+	return {light: lscore, dark: dscore};
+}
+
 
 // update the internal and visual score keeping 
 function updateScores() {
 	var lscore = document.getElementById('light-score');
 	var dscore = document.getElementById('dark-score');
-	
-	lightScore = 0;
-	darkScore = 0;
+	var scores = getScores();
 
-	for (let i=0; i<8; i++) {
-		for (let j=0; j<8; j++) {
-			let value = gameboard[i][j];
-			if (value == DARK) {
-				darkScore++;
-			} else if (value == LIGHT) {
-				lightScore++;
-			}
-		}
-	}
+	lightScore = scores.light;
+	darkScore = scores.dark;
+
 	console.log(gameboard, lightScore,darkScore)
 
 	lscore.innerHTML = lightScore;
@@ -424,5 +431,82 @@ function gameOver() {
 }
 
 
+function simulation(runs) {
+	let stats = {
+		winner: {
+			dark: 0,
+			light: 0,
+			tie: 0
+		},
+		scores: []
+	}
+
+	for (var i=0; i<runs; i++) {
+		gameboard = cloneBoard(initial_gameboard);
+
+		darkPlayer = true;
+		console.log("minimax", getPlayerName(darkPlayer), "random", getPlayerName(!darkPlayer))
+
+
+		let ableToMove = false;
+
+		inGame = true;
+
+		while (inGame) {
+			let ai_move;
+			if (!darkPlayer) {
+				// console.log("random", getPlayerName(darkPlayer))
+				ai_move = randomMove(gameboard, darkPlayer);
+			} else {
+				// console.log("minimax", getPlayerName(darkPlayer))
+				ai_move = simpleMinimax(gameboard, darkPlayer);
+			}
+			
+
+			// console.log(ai_move);
+			if (!ai_move && !ableToMove) {
+				inGame = false;
+				break;
+			}
+			if (ai_move) {
+				// show ai's move
+				// gameboard[ai_move.action[0]][ai_move.action[1]] = getPlayerPiece(darkPlayer);
+				// refreshGameBoard(gameboard);
+
+				// await sleep(1);
+				gameboard = ai_move.state;
+				// refreshGameBoard(gameboard);
+				ableToMove = true;
+			} else {
+				ableToMove = false;
+			}
+			
+			darkPlayer = !darkPlayer;
+			// updatePlayer(darkPlayer);
+			// updateScores();
+		}
+		if (!inGame) {
+			var winner;
+			var scores = getScores();
+			if (scores.dark > scores.light) {
+				stats.winner.dark++;
+				winner = "dark"
+			} else if (scores.dark < scores.light) {
+				stats.winner.light++;
+				winner = "light"
+			} else {
+				stats.winner.tie++;
+				winner = "tie"
+			}
+			console.log("winner", winner)
+			console.log("scores", scores)
+			stats.scores.push(scores.dark-scores.light)
+		}
+	}
+	let average = (array) => array.reduce((a, b) => a + b) / array.length;
+	console.log("stats", stats, average(stats.scores))
+	
+
+}
 
 window.onload = createGameTable();

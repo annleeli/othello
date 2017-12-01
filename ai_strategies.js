@@ -6,7 +6,7 @@ function randomMove(board, player) {
 	if (allMoves.moves.length == 0) return false;
 
 	var randMove = getRandomInt(0, allMoves.moves.length-1);
-	console.log(allMoves, randMove);
+	// console.log(allMoves, randMove);
 	return allMoves.moves[randMove];
 }
 
@@ -62,7 +62,7 @@ function evalCount(node, player) {
 			}
 		}
 	}
-	return 2*(score - oppScore) + 1.5*mobility;
+	return 1*(score - oppScore) + 1.25*mobility;
 }
 
 function sortedIndex(array, value) {
