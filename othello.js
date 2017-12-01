@@ -292,6 +292,7 @@ async function doMove(button, i, j) {
 					// check if human has moves
 					possibleMoves = getPossibleMoves(gameboard, darkPlayer)
 					numPlayerMoves = possibleMoves.moves.length;
+					console.log("HUMAN HAS ", numPlayerMoves)
 					if (numPlayerMoves == 0) {
 						console.log("NO MOVES")
 						darkPlayer = !darkPlayer;
