@@ -125,7 +125,7 @@ function minimax(node, depth, eval, max, player, alpha, beta) {
 function simpleMinimax(board, player) {
 	let rootNode = {state: cloneBoard(board), action: null};
 
-	let maxVal = minimax(rootNode, 5, evalCount, true, player, Infinity, -Infinity);
+	let maxVal = minimax(rootNode, 6, evalCount, true, player, Infinity, -Infinity);
 	// console.log("simpleMinimax: ", maxVal);
 	// console.log("simpleMinimax", minimaxMoves)
 	return maxVal.node.action != null ? maxVal.node : false;

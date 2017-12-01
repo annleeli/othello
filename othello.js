@@ -269,7 +269,7 @@ async function doMove(button, i, j) {
 				console.log("AIs turn!")
 				possibleMoves = getPossibleMoves(gameboard, darkPlayer)
 				refreshGameBoard(possibleMoves.board);
-				await sleep(400);	
+				await sleep(300);	
 	
 				// let ai_move = randomMove(gameboard, darkPlayer);
 				let ai_move = simpleMinimax(gameboard, darkPlayer);
@@ -356,7 +356,7 @@ async function watchAi() {
 			gameboard[ai_move.action[0]][ai_move.action[1]] = getPlayerPiece(darkPlayer);
 			refreshGameBoard(gameboard);
 
-			await sleep(10);
+			await sleep(1);
 			gameboard = ai_move.state;
 			refreshGameBoard(gameboard);
 			ableToMove = true;
@@ -366,7 +366,7 @@ async function watchAi() {
 		
 		darkPlayer = !darkPlayer;
 		// updatePlayer(darkPlayer);
-		// updateScores();
+		updateScores();
 	}
 
 	if (!inGame) gameOver();
