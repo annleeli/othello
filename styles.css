@@ -1,0 +1,53 @@
+
+#play-button {
+
+}
+
+#game {
+	
+}
+
+#scores {
+	
+}
+
+.hidden {
+	display: none;
+}
+
+td {
+	background-color: green;
+}
+
+.button {
+	border: none;
+	background-color: transparent;
+	width: 25px;
+	height: 25px;
+	font-size: 24px;
+	line-height: 20px;
+	padding: 0;
+}
+
+/* buttons */
+.button-blank {
+	color: transparent;
+}
+
+.button-light {
+	color: white;
+}
+
+.button-dark {
+	color: black;
+}
+
+.button-possible-light {
+	cursor: pointer;
+	color: rgba(220, 220, 220, 0.5);
+}
+
+.button-possible-dark {
+	cursor: pointer;
+	color: rgba(45, 45, 45, 0.5);
+}

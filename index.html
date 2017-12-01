@@ -1,0 +1,40 @@
+<html>
+	<head>	
+		<title>Othello</title>
+		<link rel="stylesheet" href="styles.css">
+	</head>
+
+	<body>
+		<h1>Othello</h1>
+
+		
+
+		<div id="game">
+
+			<table id='game-table'>
+			</table>
+
+			<div id='play-button'>
+				<button id="start-human-game" onclick="startGame(true)">Player vs Player</button>
+				<button id="start-computer-game" onclick="startGame(false)">Player vs Computer</button>
+				<button id="watch-ai" onclick="watchAi()">Computer vs Computer</button>	
+			</div>
+
+			<div id='ingame' class="hidden">
+				<h3 id="turn">Player's Turn</h3>		
+
+				<h2>Light Player's Score</h2>
+				<p id="light-score"></p>
+
+				<h2>Dark Player's Score</h2>
+				<p id="dark-score"/></p>
+			</div>
+		</div>
+
+		
+	<script src="othello.js"></script>
+	<script src="ai_strategies.js"></script>
+	<script src="utils.js"></script>
+
+	</body>
+</html>
