@@ -52,7 +52,7 @@ function evalCount(node, player) {
 			}
 		}
 	}
-	return score - 0.5*(oppScore);
+	return score - oppScore;
 }
 
 function sortedIndex(array, value) {
@@ -102,8 +102,10 @@ function minimax(node, depth, eval, max, player, alpha, beta) {
 		return minimax(node, depth-1, eval, !max, !player);
 	} else if (max) {
 		let maxVal = {val: -Infinity, node: null};
+		let cvals = []
 		for (let i=0; i < children.length; i++) {
 			let cval = minimax(children[i], depth-1, eval, !max, !player);
+			cvals.push(cval)
 			// console.log("max", cval, children[i])
 			if (cval.val > maxVal.val) {
 				maxVal = {val: cval.val, node: children[i]};
@@ -112,20 +114,22 @@ function minimax(node, depth, eval, max, player, alpha, beta) {
 			alpha = Math.max(alpha, maxVal.val);
 		}
 		return maxVal;
-		// console.log("max",maxVal, children);
+		// console.log("max",maxVal, children, cvals);
 		
 	} else {
 		let minVal = {val: Infinity, node: null};
+		let cvals = []
 		for (let i=0; i < children.length; i++) {
 			let cval = minimax(children[i], depth-1, eval, !max, !player);
 			// console.log("min", cval, children[i])
+			cvals.push(cval)
 			if (cval.val < minVal.val) {
 				minVal = {val: cval.val, node: children[i]};
 			}
 			if (minVal.val <= alpha) return minVal;
 			beta = Math.min(beta, minVal.val);
 		}
-		// console.log("min",minVal, children);
+		// console.log("min",minVal, children, cvals);
 		return minVal;
 	}
 }
@@ -133,7 +137,7 @@ function minimax(node, depth, eval, max, player, alpha, beta) {
 function simpleMinimax(board, player) {
 	let rootNode = {state: cloneBoard(board), action: null};
 
-	let maxVal = minimax(rootNode, 5, evalCount, true, player, -Infinity, Infinity);
+	let maxVal = minimax(rootNode, 4, evalCount, true, player, -Infinity, Infinity);
 	// console.log("simpleMinimax: ", maxVal);
 	// console.log("simpleMinimax", minimaxMoves)
 	return maxVal.node.action != null ? maxVal.node : false;

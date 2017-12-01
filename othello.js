@@ -288,8 +288,15 @@ async function doMove(button, i, j) {
 				}
 					darkPlayer = !darkPlayer;
 					updatePlayer(darkPlayer);
+
+					// check if human has moves
 					possibleMoves = getPossibleMoves(gameboard, darkPlayer)
 					numPlayerMoves = possibleMoves.moves.length;
+					if (numPlayerMoves == 0) {
+						console.log("NO MOVES")
+						darkPlayer = !darkPlayer;
+						updatePlayer(darkPlayer);
+					}
 			} while (numPlayerMoves == 0);
 			
 		}
@@ -343,8 +350,13 @@ async function watchAi() {
 	inGame = true;
 
 	while (inGame) {
-		// let ai_move = randomMove(gameboard, darkPlayer);
-		let ai_move = simpleMinimax(gameboard, darkPlayer);
+		let ai_move;
+		if (darkPlayer) {
+			ai_move = randomMove(gameboard, darkPlayer);
+		} else {
+			ai_move = simpleMinimax(gameboard, darkPlayer);
+		}
+		
 
 		// console.log(ai_move);
 		if (!ai_move && !ableToMove) {
@@ -365,7 +377,7 @@ async function watchAi() {
 		}
 		
 		darkPlayer = !darkPlayer;
-		// updatePlayer(darkPlayer);
+		updatePlayer(darkPlayer);
 		updateScores();
 	}
 
