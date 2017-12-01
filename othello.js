@@ -352,9 +352,11 @@ async function watchAi() {
 
 	while (inGame) {
 		let ai_move;
-		if (darkPlayer) {
+		if (!darkPlayer) {
+			console.log("random")
 			ai_move = randomMove(gameboard, darkPlayer);
 		} else {
+			console.log("minimax")
 			ai_move = simpleMinimax(gameboard, darkPlayer);
 		}
 		

@@ -99,12 +99,12 @@ function minimax(node, depth, eval, max, player, alpha, beta) {
 		return retVal;
 	} else if (children.length == 0) {
 		// pass current board and change player if no moves for current player
-		return minimax(node, depth-1, eval, !max, !player);
+		return minimax(node, depth-1, eval, !max, !player, alpha, beta);
 	} else if (max) {
 		let maxVal = {val: -Infinity, node: null};
 		let cvals = []
 		for (let i=0; i < children.length; i++) {
-			let cval = minimax(children[i], depth-1, eval, !max, !player);
+			let cval = minimax(children[i], depth-1, eval, !max, !player, alpha, beta);
 			cvals.push(cval)
 			// console.log("max", cval, children[i])
 			if (cval.val > maxVal.val) {
@@ -120,7 +120,7 @@ function minimax(node, depth, eval, max, player, alpha, beta) {
 		let minVal = {val: Infinity, node: null};
 		let cvals = []
 		for (let i=0; i < children.length; i++) {
-			let cval = minimax(children[i], depth-1, eval, !max, !player);
+			let cval = minimax(children[i], depth-1, eval, !max, !player, alpha, beta);
 			// console.log("min", cval, children[i])
 			cvals.push(cval)
 			if (cval.val < minVal.val) {
@@ -137,7 +137,7 @@ function minimax(node, depth, eval, max, player, alpha, beta) {
 function simpleMinimax(board, player) {
 	let rootNode = {state: cloneBoard(board), action: null};
 
-	let maxVal = minimax(rootNode, 4, evalCount, true, player, -Infinity, Infinity);
+	let maxVal = minimax(rootNode, 3, evalCount, true, player, -Infinity, Infinity);
 	// console.log("simpleMinimax: ", maxVal);
 	// console.log("simpleMinimax", minimaxMoves)
 	return maxVal.node.action != null ? maxVal.node : false;
