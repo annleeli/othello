@@ -60,7 +60,7 @@ function evalCount(node, player) {
 
 
 // evaluation function with weighted squares strategy, mobility and stability heuristics 
-function evalWithMobilityAndStable(node, player) {
+function evalWithMobilityAndStability(node, player) {
 	// console.log("evalCount", node)
 	var piece = getPlayerPiece(player);
 	var oppPiece = getOpponentPiece(player);
@@ -190,6 +190,6 @@ function simpleMinimax(board, player) {
 
 	var depth = blankSpaces(board) > 7 ? 5 : Infinity;
 
-	let maxVal = minimax(rootNode, depth, evalWithMobilityAndStable, true, player, -Infinity, Infinity);
+	let maxVal = minimax(rootNode, depth, evalWithMobilityAndStability, true, player, -Infinity, Infinity);
 	return maxVal.node.action != null ? maxVal.node : false;
 }
