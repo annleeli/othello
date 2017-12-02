@@ -65,6 +65,77 @@ function evalCount(node, player) {
 	return 1*(score - oppScore) + 1.25*mobility;
 }
 
+function evalWithMobilityAndStable(node, player) {
+	// console.log("evalCount", node)
+	var piece = getPlayerPiece(player);
+	var oppPiece = getOpponentPiece(player);
+	var score = 0;
+	var oppScore = 0;
+	var stable = 0;
+	var oppStable = 0;
+	// how many moves the player would have next
+	var mobility = successor(node, player).length;
+	var oppMobility = successor(node, !player).length;
+	var rowFull=[];
+	var columnFull=[];
+	var diagonalFull=[];
+	// position values
+	for (let i=0; i<8; i++) {
+		rowFull[i] = true;
+		for (let j=0; j<8; j++) {
+			columnFull[j] = true;
+			if (node.state[i][j] == piece) {
+				rowFull[i] = false;
+				columnFull[j] = false;
+				score += position_vals[i][j];
+			} else if (node.state[i][j] == oppPiece) {
+				rowFull[i] = false;
+				columnFull[j] = false;
+				oppScore += position_vals[i][j];
+			}
+		}
+	}
+
+	// stable pieces
+	for (let x=0;x<16;x++){
+		diagonalFull[x] = true;
+		for (let y=0;y<=x;y++){
+			var i = x-y;
+			if (i < 8 && y < 8){
+				if (node.state[i][y] == piece) {
+					diagonalFull[i] = false;
+				} else if (node.state[i][y] == oppPiece) {
+					diagonalFull[i] = false;
+				}
+			}
+
+		}
+	}
+
+	for (let x=0;x<8;x++){
+		for (let y=0;y<8;y++){
+			if (node.state[x][y] == piece) {
+				// Corner piece
+				if ((x==0 && y ==0) || (x==7 && y==7) || (x ==0 && y==7) || (x==7 &&y==0)){
+					stable++;
+				}
+				else if (rowFull[x] == true && columnFull[y] == true && diagonalFull[x]== true){
+					stable++;
+				}
+			} else if (node.state[x][y] == oppPiece) {
+				if ((x==0 && y ==0) || (x==7 && y==7) || (x ==0 && y==7) || (x==7 &&y==0)){
+					oppStable++;
+				}
+				else if (rowFull[x] == true && columnFull[y] == true && diagonalFull[x]== true){
+					oppStable++;
+				}
+			}			
+		}
+	}
+	return 10* (score - oppScore) + 5*(mobility - oppMobility) + 50*(stable - oppStable);
+}
+
+
 function sortedIndex(array, value) {
     var low = 0,
         high = array.length;
@@ -149,10 +220,10 @@ function simpleMinimax(board, player) {
 	let rootNode = {state: cloneBoard(board), action: null};
 	minimaxMoves = [];
 
-	var depth = blankSpaces(board) > 5 ? 5 : Infinity;
+	var depth = blankSpaces(board) > 7 ? 5 : Infinity;
 
 
-	let maxVal = minimax(rootNode, depth, evalCount, true, player, -Infinity, Infinity);
+	let maxVal = minimax(rootNode, depth, evalWithMobilityAndStable, true, player, -Infinity, Infinity);
 	// console.log("simpleMinimax: ", maxVal);
 	// console.log("simpleMinimax", minimaxMoves)
 	return maxVal.node.action != null ? maxVal.node : false;

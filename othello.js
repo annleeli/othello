@@ -111,9 +111,9 @@ function getScores() {
 		for (let j=0; j<8; j++) {
 			let value = gameboard[i][j];
 			if (value == DARK) {
-				lscore++;
-			} else if (value == LIGHT) {
 				dscore++;
+			} else if (value == LIGHT) {
+				lscore++;
 			}
 		}
 	}
@@ -130,7 +130,7 @@ function updateScores() {
 	lightScore = scores.light;
 	darkScore = scores.dark;
 
-	console.log(gameboard, lightScore,darkScore)
+	// console.log(gameboard, lightScore,darkScore)
 
 	lscore.innerHTML = lightScore;
 	dscore.innerHTML = darkScore;
@@ -215,6 +215,7 @@ function flipPieces(board,i,j,player) {
 
 }
 
+// returns the number of blank spaces
 function blankSpaces(board) {
 	var count = 0;
 	for (let i=0; i < 8; i++)  {
