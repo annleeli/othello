@@ -9,10 +9,6 @@ const initial_gameboard = [[0,0,0,0,0,0,0,0],
 
 var gameboard = cloneBoard(initial_gameboard);
 var possibleBoard;
-var lightPieces = [];
-var darkPieces = [];
-var lightScore = 0;
-var darkScore = 0;
 var possibleMoves = [];
 
 const htmlGame = 'game-table';
@@ -27,6 +23,10 @@ var darkPlayer = true;	// dark
 var inGame = false;
 var humanMode = true;
 
+//
+// UTILITY FUNCTIONS
+//
+
 function cloneBoard(board) {
 	var newBoard = [];
 	for (var i = 0; i < board.length; i++)
@@ -35,7 +35,7 @@ function cloneBoard(board) {
 }
 
 
-// initial game board creation
+// initial html game board creation
 function createGameTable() {
 	var gametable = document.getElementById(htmlGame);
 
@@ -90,6 +90,19 @@ function getOpponentPiece(player) {
 }
 
 
+// returns the number of blank spaces
+function blankSpaces(board) {
+	var count = 0;
+	for (let i=0; i < 8; i++)  {
+		for (let j=0; j<8; j++) {
+			if (board[i][j] == BLANK) {
+				count++;
+			}
+		}
+	}
+	return count;
+}
+
 // updates current view of game 
 function refreshGameBoard(board) {
 	var gametable = document.getElementById(htmlGame);
@@ -127,14 +140,8 @@ function updateScores() {
 	var dscore = document.getElementById('dark-score');
 	var scores = getScores();
 
-	lightScore = scores.light;
-	darkScore = scores.dark;
-
-	// console.log(gameboard, lightScore,darkScore)
-
-	lscore.innerHTML = lightScore;
-	dscore.innerHTML = darkScore;
-
+	lscore.innerHTML = scores.light;
+	dscore.innerHTML = scores.dark;
 }
 
 function getPlayerName(player) {
@@ -146,18 +153,19 @@ function updatePlayer(player) {
 	turn.innerHTML = getPlayerName(player) + " Player's turn";
 }
 
-function getWinner() {
-	if (lightScore > darkScore) {
+function getWinner(scores) {
+	if (scores.light > scores.dark) {
 		return "Light";
-	} else if (lightScore < darkScore) {
+	} else if (scores.light < scores.dark) {
 		return "Dark";
 	} else {
 		return "Tie";
 	}
 }
 
-
-// GAME 
+//
+// GAME ENGINE
+//
 
 // board where piece not placed yet at (i,j)
 function flipPieces(board,i,j,player) {
@@ -215,19 +223,6 @@ function flipPieces(board,i,j,player) {
 
 }
 
-// returns the number of blank spaces
-function blankSpaces(board) {
-	var count = 0;
-	for (let i=0; i < 8; i++)  {
-		for (let j=0; j<8; j++) {
-			if (board[i][j] == BLANK) {
-				count++;
-			}
-		}
-	}
-	return count;
-}
-
 // get all possible moves by searching each blank spot if it is valid
 function getPossibleMoves(board, player) {
 	let possible = cloneBoard(board);
@@ -253,9 +248,6 @@ function startGame(human) {
 	var ingame = document.getElementById('ingame');
 	ingame.className = "";
 
-	// var playBtn = document.getElementById('play-button');
-	// playBtn.className = "hidden";
-
 	gameboard = cloneBoard(initial_gameboard);
 
 	darkPlayer = true;
@@ -269,7 +261,6 @@ function startGame(human) {
 
 	inGame = true;
 	humanMode = human;
-	
 
 }
 
@@ -299,7 +290,6 @@ async function doMove(button, i, j) {
 	
 				// let ai_move = randomMove(gameboard, darkPlayer);
 				let ai_move = simpleMinimax(gameboard, darkPlayer);
-				console.log("ai_move", ai_move);
 	
 				if (ai_move) {
 					// show ai's move
@@ -364,10 +354,10 @@ async function watchAi() {
 	var ingame = document.getElementById('ingame');
 	ingame.className = "";
 
-	// var playBtn = document.getElementById('play-button');
-	// playBtn.className = "hidden";
-
 	gameboard = cloneBoard(initial_gameboard);
+
+	console.log("random", getPlayerName(!darkPlayer))
+	console.log("minimax", getPlayerName(darkPlayer))
 
 	darkPlayer = true;
 	updatePlayer(darkPlayer);
@@ -378,21 +368,16 @@ async function watchAi() {
 	await sleep(300);
 
 	let ableToMove = false;
-
 	inGame = true;
 
 	while (inGame) {
 		let ai_move;
 		if (!darkPlayer) {
-			console.log("random", getPlayerName(darkPlayer))
 			ai_move = randomMove(gameboard, darkPlayer);
 		} else {
-			console.log("minimax", getPlayerName(darkPlayer))
 			ai_move = simpleMinimax(gameboard, darkPlayer);
 		}
 		
-
-		// console.log(ai_move);
 		if (!ai_move && !ableToMove) {
 			inGame = false;
 			break;
@@ -421,13 +406,10 @@ async function watchAi() {
 function gameOver() {	
 	updateScores();
 	console.log("game over");	
-	console.log("winner", getWinner())	
+	console.log("winner", getWinner(getScores()))	
 
 	var turn = document.getElementById('turn');
-	turn.innerHTML = "Winner: " + getWinner();
-
-	// var playBtn = document.getElementById('play-button');
-	// playBtn.className = "";
+	turn.innerHTML = "Winner: " + getWinner(getScores());
 
 }
 
@@ -457,50 +439,34 @@ function simulation(runs) {
 		while (inGame) {
 			let ai_move;
 			if (!darkPlayer) {
-				// console.log("random", getPlayerName(darkPlayer))
 				ai_move = randomMove(gameboard, darkPlayer);
 			} else {
-				// console.log("minimax", getPlayerName(darkPlayer))
 				ai_move = simpleMinimax(gameboard, darkPlayer);
 			}
 			
-
-			// console.log(ai_move);
 			if (!ai_move && !ableToMove) {
 				inGame = false;
 				break;
 			}
 			if (ai_move) {
-				// show ai's move
-				// gameboard[ai_move.action[0]][ai_move.action[1]] = getPlayerPiece(darkPlayer);
-				// refreshGameBoard(gameboard);
-
-				// await sleep(1);
 				gameboard = ai_move.state;
-				// refreshGameBoard(gameboard);
 				ableToMove = true;
 			} else {
 				ableToMove = false;
 			}
 			
 			darkPlayer = !darkPlayer;
-			// updatePlayer(darkPlayer);
-			// updateScores();
 		}
 		if (!inGame) {
-			var winner;
 			var scores = getScores();
 			if (scores.dark > scores.light) {
 				stats.winner.dark++;
-				winner = "dark"
 			} else if (scores.dark < scores.light) {
 				stats.winner.light++;
-				winner = "light"
 			} else {
 				stats.winner.tie++;
-				winner = "tie"
 			}
-			console.log("winner", winner)
+			console.log("winner", getWinner(scores))
 			console.log("scores", scores)
 			stats.scores.push(scores.dark-scores.light)
 		}
